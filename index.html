@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LudoBiblioteca - Dashboard</title>
+  
+  <!-- Hoja de estilos CSS propia -->
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <!-- Iconos Lucide (opcional para los iconos del dashboard) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- BARRA DE NAVEGACIÓN -->
+  <nav class="navbar">
+    <div class="brand">
+      <i data-lucide="dices" class="icon-brand"></i>
+      <h1>LudoBiblioteca</h1>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary">+ Registrar Partida</button>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="container">
+
+    <!-- 1. RESUMEN / ESTADÍSTICAS RÁPIDAS -->
+    <section class="stats-grid">
+      <!-- Card Juegos -->
+      <div class="card stat-card">
+        <div>
+          <span class="stat-label">Total Juegos</span>
+          <p id="total-juegos" class="stat-value">0</p>
+        </div>
+        <div class="stat-icon icon-indigo">
+          <i data-lucide="box"></i>
+        </div>
+      </div>
+
+      <!-- Card Jugadores -->
+      <div class="card stat-card">
+        <div>
+          <span class="stat-label">Jugadores</span>
+          <p id="total-jugadores" class="stat-value">0</p>
+        </div>
+        <div class="stat-icon icon-emerald">
+          <i data-lucide="users"></i>
+        </div>
+      </div>
+
+      <!-- Card Partidas -->
+      <div class="card stat-card">
+        <div>
+          <span class="stat-label">Partidas Jugadas</span>
+          <p id="total-partidas" class="stat-value">0</p>
+        </div>
+        <div class="stat-icon icon-amber">
+          <i data-lucide="swords"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. SECCIONES PRINCIPALES (GRID) -->
+    <div class="dashboard-grid">
+
+      <!-- SECCIÓN: JUEGOS -->
+      <section class="card section-card">
+        <div class="section-header">
+          <h2><i data-lucide="box" class="icon-indigo"></i> Mi Ludoteca</h2>
+          <a href="#" class="link">Ver todos</a>
+        </div>
+        <div id="lista-juegos" class="section-content">
+          <p class="empty-text">No hay juegos cargados aún.</p>
+        </div>
+        <button class="btn btn-secondary">+ Añadir Juego</button>
+      </section>
+
+      <!-- SECCIÓN: ÚLTIMAS PARTIDAS -->
+      <section class="card section-card">
+        <div class="section-header">
+          <h2><i data-lucide="history" class="icon-amber"></i> Últimas Partidas</h2>
+          <a href="#" class="link">Ver historial</a>
+        </div>
+        <div id="lista-partidas" class="section-content">
+          <p class="empty-text">No hay partidas registradas.</p>
+        </div>
+        <button class="btn btn-secondary">+ Nueva Partida</button>
+      </section>
+
+      <!-- SECCIÓN: JUGADORES -->
+      <section class="card section-card">
+        <div class="section-header">
+          <h2><i data-lucide="trophy" class="icon-emerald"></i> Jugadores</h2>
+          <a href="#" class="link">Ver grupo</a>
+        </div>
+        <div id="lista-jugadores" class="section-content">
+          <p class="empty-text">No hay jugadores añadidos.</p>
+        </div>
+        <button class="btn btn-secondary">+ Añadir Jugador</button>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+  </script>
+  <script type="module" src="js/app.js"></script>
+
+  <!-- MODAL PARA AÑADIR JUEGO -->
+<div id="modal-juego" class="modal-overlay">
+  <div class="modal-container">
+    
+    <!-- Encabezado del Modal -->
+    <div class="modal-header">
+      <h3>Añadir Nuevo Juego</h3>
+      <button type="button" class="btn-close" id="btn-cerrar-modal">&times;</button>
+    </div>
+
+    <!-- Formulario -->
+    <form id="form-juego" class="modal-body">
+      
+ 
+  <!-- CAMPO CON BUSCADOR DE BGG -->
+  <div class="form-group">
+    <label for="titulo">Nombre del Juego *</label>
+    <div class="input-with-button">
+      <input type="text" id="titulo" name="titulo" placeholder="Ej: Catan, Wingspan..." required>
+      <button type="button" id="btn-buscar-bgg" class="btn btn-primary btn-search" title="Buscar en BoardGameGeek">
+        <i data-lucide="search"></i> Buscar BGG
+      </button>
+    </div>
+    <!-- Contenedor para mostrar resultados de la búsqueda -->
+    <div id="bgg-resultados" class="bgg-results-list" style="display: none;"></div>
+    <span id="bgg-status" class="status-text"></span>
+  </div>
+
+  <!-- VISTA PREVIA DE PORTADA -->
+  <div id="preview-container" class="preview-container" style="display: none;">
+    <img id="img-preview" src="" alt="Portada del juego">
+    <span class="preview-label">Portada detectada</span>
+  </div>
+
+  <!-- AUTOR Y AÑO DE PUBLICACIÓN -->
+  <div class="form-row">
+    <div class="form-group">
+      <label for="autor">Autor / Diseñador</label>
+      <input type="text" id="autor" name="autor" placeholder="Ej: Klaus Teuber">
+    </div>
+    
+    <div class="form-group">
+      <label for="anio">Año de publicación</label>
+      <input type="number" id="anio" name="anio" placeholder="Ej: 1995">
+    </div>
+  </div>
+
+  <!-- NÚMERO DE JUGADORES -->
+  <div class="form-row">
+    <div class="form-group">
+      <label for="minJugadores">Min. Jugadores</label>
+      <input type="number" id="minJugadores" name="minJugadores" min="1" value="1" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="maxJugadores">Máx. Jugadores</label>
+      <input type="number" id="maxJugadores" name="maxJugadores" min="1" value="4" required>
+    </div>
+  </div>
+
+  <!-- DURACIÓN Y CATEGORÍA -->
+  <div class="form-row">
+    <div class="form-group">
+      <label for="duracion">Duración (minutos)</label>
+      <input type="number" id="duracion" name="duracion" min="5" step="5" value="60">
+    </div>
+
+    <div class="form-group">
+      <label for="categoria">Categoría</label>
+      <input type="text" id="categoria" name="categoria" placeholder="Ej: Estrategia, Familiar">
+    </div>
+  </div>
+
+  <!-- URL DE LA IMAGEN (SE AUTOFIRMA AL BUSCAR) -->
+  <div class="form-group">
+    <label for="imagenUrl">URL de la carátula</label>
+    <input type="url" id="imagenUrl" name="imagenUrl" placeholder="https://...">
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" id="btn-cancelar">Cancelar</button>
+    <button type="submit" class="btn btn-primary">Guardar Juego</button>
+  </div>
+</form>
+
+    </form>
+  </div>
+</div>
+</body>
+</html>
